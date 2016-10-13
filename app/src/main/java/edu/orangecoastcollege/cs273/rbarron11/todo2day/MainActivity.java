@@ -2,11 +2,19 @@ package edu.orangecoastcollege.cs273.rbarron11.todo2day;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.widget.EditText;
+import android.widget.ListView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private DBHelper database;
+    private List<Task> taskList;
+    private TaskListAdapter taskListAdapter;
+
+    private EditText taskEditText;
+    private ListView taskListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,27 +22,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //for now (temporary) delete old database and then create the new
-        this.deleteDatabase(DBHelper.DATABASE_TABLE);
+       //  this.deleteDatabase(DBHelper.DATABASE_TABLE);
 
         //lets make the DBHelper reference:
-        DBHelper db = new DBHelper(this);
+        database = new DBHelper(this);
 
-        //lets make a new task and add it to the database:
-        /*Task newTask = new Task (1, "Study for CS273 Midterm", 0);
-        db.addTask(newTask);*/
-        //or vvvv
+        //fill the list with tasks from the database
+        taskList = database.getAllTasks();
 
-        db.addTask(new Task(1, "Study for CS 273 Midterm", 0));
-        db.addTask(new Task(2, "Finish yo Dam Superheroes Project", 0));
-        db.addTask(new Task(3, "Play YuGiOh", 0));
-        db.addTask(new Task(4, "Stop playing YuGiOh", 0));
-        db.addTask(new Task(5, "What the hell, keep playing YuGiOh", 0));
+        //create our custom task list adapter
+        //(We want to associate the adapter with the context, the layout and the list)
+        taskListAdapter = new TaskListAdapter(this, R.layout.task_item, taskList);
 
-        //lets get all the tasks from the database and print them with Log.i()
-        ArrayList<Task> allTasks = db.getAllTasks();
-        //loop through each task
-        for(Task singleTask : allTasks)
-            Log.i("DATABASE TASK" , singleTask.toString());
+        //Connect the list view with our layout
+        taskListView = (ListView) findViewById(R.id.taskListView);
+
+        //Associate the adapter with the list view
+        taskListView.setAdapter(taskListAdapter);
+
 
     }
 }
