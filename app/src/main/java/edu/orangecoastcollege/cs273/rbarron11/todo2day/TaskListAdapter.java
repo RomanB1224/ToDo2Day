@@ -51,6 +51,16 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
                 (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(mResourceId, null);
 
+        //Lets fill the checkbox with text and update the status (checked or not checked)
+        mIsDoneCheckBox = (CheckBox) view.findViewById(R.id.isDoneCheckBox);
+        mIsDoneCheckBox.setText(selectedTask.getDescription());
+        mIsDoneCheckBox.setChecked(selectedTask.getIsDone() == 1 ? true : false);
+
+        //associate each text box with a specific task
+        //every view has a property called its "Tag"
+        //Tag is a locker for one object
+        //??
+        mIsDoneCheckBox.setTag(selectedTask);
 
         return view;
     }
